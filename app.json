@@ -22,7 +22,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gistapp.flatlistapp"
+    },
+    "android": {
+      "package": "com.gistapp.flatlistapp"
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }

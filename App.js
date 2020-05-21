@@ -1,57 +1,27 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, FlatList, Dimensions } from "react-native";
-
-function Item({ item }) {
-  return (
-    <View style={[styles.item, { backgroundColor: item.color }]}>
-      <Text>
-        {item.index} {item.word}
-      </Text>
-    </View>
-  );
-}
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
-}
-
-function getData(offset = 0) {
-  const words = ["Hello", "World", "Random", "Sample", "Corona", "Good", "Bad"];
-  const colors = ["#ffd", "#dff", "#fdf", "#ddf", "#dfd", "#fdd"];
-  const data = [];
-  for (let i = 0; i < 10; i++) {
-    const word = words[getRandomInt(words.length)];
-    const color = colors[getRandomInt(colors.length)];
-    data.push({
-      index: offset + i,
-      word,
-      color,
-    });
-  }
-  return data;
-}
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import * as Font from "expo-font";
 
 export default function App() {
-  const [data, setData] = useState(getData());
+  const [ready, setReady] = useState(false);
 
-  function handleEndReached() {
-    const newData = getData(data.length);
-    setData(data.concat(newData));
-  }
+  useEffect(() => {
+    Font.loadAsync({
+      "gilroy-bold": require("./assets/fonts/Gilroy-Bold.ttf"),
+    }).then(() => {
+      setReady(true);
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
-      <FlatList
-        keyExtractor={(d) => d.index.toString()}
-        renderItem={Item}
-        data={data}
-        onEndReached={handleEndReached}
-        getItemLayout={(data, index) => ({
-          length: 150,
-          offset: 150 * index,
-          index,
-        })}
-      />
+      {ready ? (
+        <View style={styles.inner}>
+          <Text style={styles.text}>Hello world</Text>
+        </View>
+      ) : (
+        <ActivityIndicator />
+      )}
     </View>
   );
 }
@@ -63,10 +33,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  item: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: Dimensions.get("window").width,
-    height: 150,
+  inner: {
+    width: 120,
+  },
+  text: {
+    fontFamily: "gilroy-bold",
+    fontSize: 24,
+    lineHeight: 25,
   },
 });
